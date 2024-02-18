@@ -11,7 +11,43 @@ private let testMacros: [String: Macro.Type] = [
 #endif
 
 final class ObservingMacroTests: XCTestCase {
-    func test_expansion() {
+    func test_expansion_without_inheritance() {
+        assertMacroExpansion(
+        """
+        @Observing(providesInheritance: false)
+        class Class {}
+        """,
+        expandedSource:
+        """
+        class Class {
+
+            private func observeState() {
+
+            }}
+        """,
+        macros: testMacros
+        )
+    }
+    
+    func test_expansion_with_inheritance() {
+        assertMacroExpansion(
+        """
+        @Observing(providesInheritance: true)
+        class Class {}
+        """,
+        expandedSource:
+        """
+        class Class {
+
+            override func observeState() {
+
+            }}
+        """,
+        macros: testMacros
+        )
+    }
+    
+    func test_expansion_without_argument() {
         assertMacroExpansion(
         """
         @Observing
@@ -20,9 +56,9 @@ final class ObservingMacroTests: XCTestCase {
         expandedSource:
         """
         class Class {
-        
+
             private func observeState() {
-        
+
             }}
         """,
         macros: testMacros

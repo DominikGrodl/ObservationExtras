@@ -13,6 +13,12 @@ public struct ObservingMacro: MemberMacro {
             throw DiagnosticsError.observingMustBeClass
         }
         
+        let shouldOverrideSuperclassMethod = node.arguments?
+            .as(LabeledExprListSyntax.self)?.first?
+            .as(LabeledExprSyntax.self)?.expression
+            .as(BooleanLiteralExprSyntax.self)?.literal
+            .tokenKind == .keyword(Keyword.true)
+        
         let methods = classDecl.memberBlock.members
             .compactMap { member in
                 member.decl.as(FunctionDeclSyntax.self)
@@ -25,7 +31,8 @@ public struct ObservingMacro: MemberMacro {
                         .as(AttributeSyntax.self)?
                         .attributeName
                         .as(IdentifierTypeSyntax.self)?
-                        .name.text == "observeState"
+                        .name
+                        .tokenKind == .identifier("observeState")
                 }
             }
         
@@ -36,9 +43,10 @@ public struct ObservingMacro: MemberMacro {
             }
             .joined(separator: "\n")
         
+        let prefix = shouldOverrideSuperclassMethod ? "override" : "private"
         let observeStateFunction =
         """
-        private func observeState() {
+        \(prefix) func observeState() {
             \(qualifiedMethodsIdentifiers)
         }
         """
