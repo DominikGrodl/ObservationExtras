@@ -8,7 +8,7 @@ public macro observeState() = #externalMacro(
 )
 
 @attached(member, names: named(observeState))
-public macro Observing() = #externalMacro(
+public macro Observing(providesInheritance: Bool = false) = #externalMacro(
     module: "ObservationExtrasMacros",
     type: "ObservingMacro"
 )
