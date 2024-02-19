@@ -6,11 +6,12 @@ import CompilerPluginSupport
 let package = Package(
     name: "ObservationExtras",
     platforms: [
-        .iOS(.v13),
-        .macOS(.v10_15),
-        .tvOS(.v13),
-        .watchOS(.v6),
-        .macCatalyst(.v13)
+        .iOS(.v17),
+        .macOS(.v14),
+        .tvOS(.v17),
+        .watchOS(.v10),
+        .macCatalyst(.v17),
+        .visionOS(.v1)
     ],
     products: [
         .library(
