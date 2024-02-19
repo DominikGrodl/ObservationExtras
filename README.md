@@ -7,7 +7,100 @@ Those tools are mainly aimed to make it easier to use Observation together with 
 
 ## Documentation
 
-TBD
+There are currently two macros available to make the basic functionality work.
+
+### Observing
+
+@Observing macro allows you to mark you class as observing. This macro goes hand in hand with @Observable macro. Where you mark ViewModel as @Observable, you mark the recipient as @Observing. In a real world scenario, it would look something like this:
+
+```
+@Observable 
+final class ViewModel {}
+
+@Observing 
+final class ViewController: UIViewController {
+  let viewModel = ViewModel()
+}
+```
+
+Additionally, we need to somehow notify the system to start observing the state changes. There are two ways to go about this:
+
+- If your class subclasses any of the provided classes, use the `@Observing(providesInheritance: true)` macro to automatically start observing changes. This is acchieved by calling into the `observeState()` method in superclass `viewDidLoad()`.
+  - Currently provided class is ObservingUIViewController
+  - You can use this class wherever you would use UIViewController.
+  - To automate this process for any other class, create a custom class inheriting from your class, provide `func observeState()` and call it at the entrypoint. This allows the subclass to automatically start observing state changes.
+  - Example:
+  - ```
+    class ObservingUITableViewController: UITableViewController {
+      override func viewDidLoad() {
+        super.viewDidLoad()
+        observeState()
+      }
+    
+      func observeState() {}
+    }
+
+    @Observing(providesInheritance: true)
+    final class MyTableViewController: UITableViewController {
+      // super.observeState() get automatically called in super.viewDidLoad()
+      // the macro generates override func observeState() instead of private func observeState() it would if called as just @Observing
+    }
+    ```
 
 
 
+Additionally, we need to somehow notify the system to start observing the state changes. This is achieved by calling the observeState() generated method on entry-point, so generally in viewDidLoad event when using ViewControllers. In the future, there will be a possibility to automate this process. The development around this can be seen in the (experimental/observing-view-controller)[https://github.com/DominikGrodl/ObservationExtras/tree/experimantal/observing-view-controller] branch.
+
+
+### observeState()
+
+@observeState macro lets you specify which function access state and should be called again when the state changes. This allows you to be as granular with state updates as you need, because the function will be called again only if it accesses given piece of state, not when *any* state changes. 
+
+Example scenario:
+
+```
+@Observable 
+final class ViewModel {
+  var isButtonHidden = false
+  var buttonText = "Press me
+}
+
+@Observing 
+final class ViewController: UIViewController {
+  let viewModel = ViewModel()
+  let button = UIButton()
+
+  @observableState
+  private func setupButtonState() {
+    button.isHidden = viewModel.isButtonHidden
+    button.setTitle(viewModel.buttonText, for: .normal)
+  }
+}
+```
+
+In this scenarion, if any of the accesses variables change, the whole `setupButtonState()` function is called. But if we did something like this:
+```
+@Observable 
+final class ViewModel {
+  var isButtonHidden = false
+  var buttonText = "Press me
+}
+
+@Observing 
+final class ViewController: UIViewController {
+  let viewModel = ViewModel()
+  let button = UIButton()
+
+  @observableState
+  private func setupButtonVisibilityState() {
+    button.isHidden = viewModel.isButtonHidden
+  }
+
+  @observeState
+  private func setupButtonTitle() {
+    button.setTitle(viewModel.buttonText, for: .normal)
+  }
+}
+```
+
+Here, only the function which accesses the variable would be called when the variable changes.
