@@ -43,7 +43,7 @@ Additionally, we need to somehow notify the system to start observing the state 
     @Observing(providesInheritance: true)
     final class MyTableViewController: UITableViewController {
       // super.observeState() get automatically called in super.viewDidLoad()
-      // the macro generates override func observeState() instead of private func observeState() it would if called as just @Observing
+      // the macro generates override func observeState() instead of private func observeState() it would if used as just @Observing
     }
     ```
 
