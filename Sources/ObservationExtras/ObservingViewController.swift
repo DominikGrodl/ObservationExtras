@@ -3,6 +3,7 @@ import UIKit
 
 open class ObservingUIViewController: UIViewController {
     open override func viewDidLoad() {
+        super.viewDidLoad()
         observeState()
     }
     
@@ -11,6 +12,7 @@ open class ObservingUIViewController: UIViewController {
 
 open class ObservingUITableViewController: UITableViewController {
     open override func viewDidLoad() {
+        super.viewDidLoad()
         observeState()
     }
     
@@ -19,6 +21,7 @@ open class ObservingUITableViewController: UITableViewController {
 
 open class ObservingUICollectionViewController: UICollectionViewController {
     open override func viewDidLoad() {
+        super.viewDidLoad()
         observeState()
     }
     
