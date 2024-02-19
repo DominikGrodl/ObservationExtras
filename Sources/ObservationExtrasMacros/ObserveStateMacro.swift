@@ -15,11 +15,11 @@ public struct ObserveStateMacro: PeerMacro {
         let result =
         """
         private func \(functionName)() {
-            withObservationTracking {
-                \(ogFunctionName)()
-            } onChange: {
-                Task { [weak self] in
-                    await self?.\(functionName)()
+            withObservationTracking { [weak self] in
+                self?.\(ogFunctionName)()
+            } onChange: { [weak self] in
+                Task { @MainActor [weak self] in
+                    self?.\(functionName)()
                 }
             }
         }
