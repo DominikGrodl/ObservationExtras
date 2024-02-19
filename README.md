@@ -23,7 +23,7 @@ final class ViewController: UIViewController {
 }
 ```
 
-Additionally, we need to somehow notify the system to start observing the state changes. This is achieved by calling the observeState() generated method on entry-point, so generally in viewDidLoad event when using ViewControllers. In the future, there will be a possibility to automate this process. The development around this can be seen in the (experimental/observing-view-controller)[https://github.com/DominikGrodl/ObservationExtras/tree/experimantal/observing-view-controller] branch.
+Additionally, we need to somehow notify the system to start observing the state changes. This is achieved by calling the observeState() generated method on entry-point, so generally in viewDidLoad event when using ViewControllers. In the future, there will be a possibility to automate this process. The development around this can be seen in the [experimental/observing-view-controller](https://github.com/DominikGrodl/ObservationExtras/tree/experimantal/observing-view-controller) branch.
 
 
 ### observeState()
