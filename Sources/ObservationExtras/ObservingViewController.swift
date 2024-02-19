@@ -1,7 +1,7 @@
 #if canImport(UIKit)
 import UIKit
 
-open class ObservingUIViewController: UIViewController {
+open class ObservingViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         observeState()
@@ -10,22 +10,37 @@ open class ObservingUIViewController: UIViewController {
     open func observeState() {}
 }
 
-open class ObservingUITableViewController: UITableViewController {
+open class ObservingUIViewController: ObservingViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         observeState()
     }
     
-    open func observeState() {}
+    open override func observeState() {
+        super.observeState()
+    }
 }
 
-open class ObservingUICollectionViewController: UICollectionViewController {
+open class ObservingUITableViewController: ObservingViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         observeState()
     }
     
-    open func observeState() {}
+    open override func observeState() {
+        super.observeState()
+    }
+}
+
+open class ObservingUICollectionViewController: ObservingViewController {
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        observeState()
+    }
+    
+    open override func observeState() {
+        super.observeState()
+    }
 }
 
 #endif
